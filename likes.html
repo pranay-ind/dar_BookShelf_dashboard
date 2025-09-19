@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Popular Books by Likes</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/taffydb/taffy-min.min.js"></script>
+    <script src="js/global-taffy-sync.js" defer></script>
+  </head>
+  <body>
+    <header class="container">
+      <nav>
+        <ul>
+          <li><a href="index.html">Dashboard</a></li>
+          <li><a href="category.html">Category</a></li>
+          <li><a href="rating.html">Ratings</a></li>
+          <li><a href="likes.html">Likes</a></li>
+          <li><a href="add-book.html">Add Book</a></li>
+        </ul>
+      </nav>
+      <hgroup>
+        <h1>Top Liked Books</h1>
+      </hgroup>
+    </header>
+    <main class="container">
+      <section>
+        <label for="categorySelect">Select Category</label>
+        <select id="categorySelect">
+          <option value="Fiction">Fiction</option>
+          <option value="Self-Help">Self-Help</option>
+          <option value="Science">Science</option>
+          <option value="Other">Other</option>
+        </select>
+        <button id="bookBtn">Show Books</button>
+      </section>
+      <section>
+        <h2>Books in Category</h2>
+        <div id="topLikedBooks" class="card-style"></div>
+      </section>
+    </main>
+    <footer class="container neog-footer">
+      <small>
+        go from zero to hero at full stack development with
+        <a href="https://neog.camp">neog.camp</a>
+      </small>
+    </footer>
+    <script>
+      function bookCard(book) {
+        return `<article class="article-style">
+            <img src = "${book.cover_url}" alt="${book.title}" class="img-style" />
+            <span class = "top-space-style">❤️ ${book.likes}</span>
+               
+                </article>`;
+      }
+      const bookBtn = document.getElementById("bookBtn");
+      const categoryElement = document.getElementById("categorySelect");
+
+      function showTopLikedBooks() {
+        const topLikedBooksContainer = document.getElementById("topLikedBooks");
+        const selectedCategory = categoryElement.value;
+
+        const books = bookShelfDB({ category: selectedCategory }).get();
+
+        const displayCards = books.map(bookCard);
+
+        if (displayCards === 0) {
+          topLikedBooksContainer.innerHTML = `<p>No Books Found</p>`;
+        } else {
+          topLikedBooksContainer.innerHTML = displayCards.join("");
+        }
+      }
+
+      bookBtn.addEventListener("click", showTopLikedBooks);
+    </script>
+  </body>
+</html>

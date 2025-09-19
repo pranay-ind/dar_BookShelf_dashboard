@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BookShelf Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/taffydb/taffy-min.min.js"></script>
+    <script src="js/global-taffy-sync.js" defer></script>
+  </head>
+  <body>
+    <header class="container">
+      <nav>
+        <ul>
+          <li><a href="index.html">Dashboard</a></li>
+          <li><a href="category.html">Category</a></li>
+          <li><a href="rating.html">Ratings</a></li>
+          <li><a href="likes.html">Likes</a></li>
+          <li><a href="add-book.html">Add Book</a></li>
+        </ul>
+      </nav>
+      <hgroup>
+        <h1>BookShelf Dashboard</h1>
+      </hgroup>
+    </header>
+    <main class="container">
+      <section>
+        <h2>Category Counts</h2>
+        <hr />
+        <div id="categoryCounts"></div>
+      </section>
+      <section>
+        <h2>Recent Books</h2>
+        <hr />
+        <div id="recentBooks" class="card-style"></div>
+      </section>
+    </main>
+    <footer class="container neog-footer">
+      <small>
+        go from zero to hero at full stack development with
+        <a href="https://neog.camp">neog.camp</a>
+      </small>
+    </footer>
+    <script>
+      function displayCount(category) {
+        const count = bookShelfDB({ category: category }).count();
+        return `<p>Total Books in ${category}: ${count}</p>`;
+      }
+
+      // i define an array named as categories containing different category of books then by using map function another function named as displayCount() showing the total no of books in different category
+
+      function displayCategoryCounts() {
+        const countContainer = document.getElementById("categoryCounts");
+        const categories = ["Fiction", "Self-Help", "Science", "Other"];
+
+        const categoryCounts = categories.map(displayCount);
+        countContainer.innerHTML = categoryCounts.join("");
+      }
+
+      // to show bookCard on page i define bookCard function and passing book as a parameter
+
+      function bookCard(book) {
+        return `<article class="article-style">
+                <img src = "${book.cover_url}" alt="${book.title}" class="img-style"/>
+                <span class = "top-space-style">❤️ ${book.likes}</span>
+               </article>`;
+      }
+      // i define a function name displayBooks and request database to get all details of books by using get method
+
+      function displayBooks() {
+        const recentBooks = document.getElementById("recentBooks");
+        const books = bookShelfDB().get();
+
+        const bookCards = books.map(bookCard);
+        recentBooks.innerHTML = bookCards.join("");
+      }
+      // i define displayData function inside of it there are also two  calling function  known as displayBooks and displayCategoryCount
+
+      function displayData() {
+        displayBooks(); // displaying books in the format of cards
+        displayCategoryCounts(); // giving total number of books based on each category
+      }
+      document.addEventListener("DOMContentLoaded", displayData);
+    </script>
+  </body>
+</html>

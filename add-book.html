@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add a New Book</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/taffydb/taffy-min.min.js"></script>
+    <script src="js/global-taffy-sync.js" defer></script>
+  </head>
+  <body>
+    <header class="container">
+      <nav>
+        <ul>
+          <li><a href="index.html">Dashboard</a></li>
+          <li><a href="category.html">Category</a></li>
+          <li><a href="rating.html">Ratings</a></li>
+          <li><a href="likes.html">Likes</a></li>
+          <li><a href="add-book.html">Add Book</a></li>
+        </ul>
+      </nav>
+      <hgroup>
+        <h1>Add a new Book</h1>
+      </hgroup>
+    </header>
+    <main class="container">
+      <section>
+        <input type="text" placeholder="Title" id="bookTitle" />
+
+        <input type="text" placeholder="Description" id="bookDescription" />
+        <label for="categorySelect">Select Category</label>
+        <select id="categorySelect">
+          <option value="Fiction">Fiction</option>
+          <option value="Science">Science</option>
+          <option value="Self-help">Self-Help</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <input type="text" id="bookUrl" placeholder="Book URL" />
+
+        <fieldset>
+          <legend>Select Rating</legend>
+          <input type="radio" name="rating" id="one" value="1" checked />
+          <label for="one">1</label>
+
+          <input type="radio" name="rating" id="two" value="2" />
+          <label for="two">2</label>
+
+          <input type="radio" name="rating" id="three" value="3" />
+          <label for="three">3</label>
+
+          <input type="radio" name="rating" id="four" value="4" />
+          <label for="four">4</label>
+
+          <input type="radio" name="rating" id="five" value="5" />
+          <label for="five">5</label>
+        </fieldset>
+        <button id="addBookBtn">Add Book</button>
+        <p id="showBookMessage"></p>
+      </section>
+    </main>
+    <footer class="container neog-footer">
+      <small>
+        go from zero to hero at full stack development with
+        <a href="https://neog.camp">neog.camp</a>
+      </small>
+    </footer>
+    <script>
+      const addBookBtn = document.getElementById("addBookBtn");
+      function getNextBookId() {
+        const newId = bookShelfDB().get().length + 1;
+        return newId;
+      }
+      function handleAddBookBtnClick() {
+        const titleElement = document.getElementById("bookTitle");
+        const descriptionElement = document.getElementById("bookDescription");
+        const categoryElement = document.getElementById("categorySelect");
+        const bookUrlElement = document.getElementById("bookUrl");
+        const ratingElement = document.querySelector(
+          'input[name="rating"]:checked'
+        );
+        const messageElement = document.getElementById("showBookMessage");
+        //console.log(messageElement);
+
+        const title = titleElement.value;
+        const description = descriptionElement.value;
+        const category = categoryElement.value;
+        const bookUrl = bookUrlElement.value;
+        const rating = ratingElement.value;
+
+        if (!title || !description || !category || !bookUrl || !rating) {
+          messageElement.innerText = "Please fill all the fields correctly";
+          return;
+        }
+
+        // clear all the inputs
+        titleElement.value = "";
+        categoryElement.value = "";
+        descriptionElement.value = "";
+        bookUrlElement.value = "";
+        ratingElement.value = "";
+
+        const newBook = {
+          book_id: getNextBookId(),
+          title,
+          description,
+          category,
+          cover_url: bookUrl,
+          rating,
+          likes: 0,
+          created_at: new Date(),
+        };
+        bookShelfDB.insert(newBook);
+        messageElement.innerText = " Book  Added sucessfully";
+      }
+      addBookBtn.addEventListener("click", handleAddBookBtnClick);
+    </script>
+  </body>
+</html>

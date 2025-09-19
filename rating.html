@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Top Rated Books</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/taffydb/taffy-min.min.js"></script>
+    <script src="js/global-taffy-sync.js" defer></script>
+  </head>
+  <body>
+    <header class="container">
+      <nav>
+        <ul>
+          <li><a href="index.html">Dashboard</a></li>
+          <li><a href="category.html">Category</a></li>
+          <li><a href="rating.html">Ratings</a></li>
+          <li><a href="likes.html">Likes</a></li>
+          <li><a href="add-book.html">Add Book</a></li>
+        </ul>
+      </nav>
+      <hgroup>
+        <h1>Top Rated Books</h1>
+      </hgroup>
+    </header>
+    <main class="container">
+      <div id="topRatedBooks" class="card-style"></div>
+    </main>
+    <footer class="container neog-footer">
+      <small>
+        go from zero to hero at full stack development with
+        <a href="https://neog.camp">neog.camp</a>
+      </small>
+    </footer>
+    <script>
+      // defining a function bookcard and passing book as a parameter to show cards on the page itsele
+      function bookCard(book) {
+        return `<article class="article-style">
+            <img src = "${book.cover_url}" alt="${book.title}" class="img-style" />
+            <span class = "top-space-style">⭐ ${book.rating}</span>
+               
+                </article>`;
+      }
+      function displayBooks() {
+        const topRatedBooks = document.getElementById("topRatedBooks"); // grabing the element
+        const books = bookShelfDB({ rating: { gt: 3 } }).get(); // get is a  method to fetch all books from the database
+        console.log(books); // for testing purpose
+
+        const bookCards = books.map(bookCard); // books is an array containing books details i run map method on bookCard function it works as a argument to bookCard function
+        topRatedBooks.innerHTML = bookCards.join("");
+      }
+      function displayData() {
+        displayBooks(); // calling the function
+      }
+      document.addEventListener("DOMContentLoaded", displayData);
+    </script>
+  </body>
+</html>
